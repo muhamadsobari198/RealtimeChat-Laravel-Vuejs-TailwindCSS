@@ -1,4 +1,5 @@
 PR
+-> Logo Aplikasi
 -> ChatBox
 -> Logout Menu (Foto - Muhamad Sobari) | Logout
 -> Form Profile
