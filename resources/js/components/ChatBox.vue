@@ -1,52 +1,147 @@
 <template>
-
-        <!-- Chat Area -->
-        <main class="flex-1 flex flex-col"  style="height: calc(100vh - 65px);">
-            <div class="flex items-center p-4 bg-white border-b">
-                <img alt="Robin Sparkles avatar" class="w-8 h-8 rounded-full mr-2" height="32" src="https://storage.googleapis.com/a1aa/image/bztGus3y2a7HKFLcq0X0OhJioyGAgsVO14BmEvvGgqpfKw8JA.jpg" width="32"/>
-                <span class="font-bold">Robin Sparkles</span>
+  <!-- Chat Area -->
+  <main class="flex-1 flex flex-col" style="height: calc(100vh - 65px);">
+    <!-- Chat Messages -->
+            <div class="flex items-center p-4 bg-white border-b" v-for="a in listuser" v-if="a.pivot.discussion_id === id">
+                <img alt="" class="w-8 h-8 rounded-full mr-2" height="32" :src="'storage/' +a['users'][0]['avatar']" width="32"  onerror="this.src='https://icons.iconarchive.com/icons/papirus-team/papirus-status/512/avatar-default-icon.png'"/>
+                <span class="font-bold capitalize">    
+    {{a['users'][0]['name']}}
+    </span>
             </div>
-            <div class="flex-1 p-4 overflow-y-auto bg-gray-50">
-                <div class="flex mb-4">
-                    <div class="flex items-center">
-                        <img alt="Robin Sparkles avatar" class="w-8 h-8 rounded-full mr-2" height="32" src="https://storage.googleapis.com/a1aa/image/bztGus3y2a7HKFLcq0X0OhJioyGAgsVO14BmEvvGgqpfKw8JA.jpg" width="32"/>
-                    </div>
-                    <div class="bg-gray-100 p-2 rounded-lg border">
-                        <p>Hi Ted😇</p>
-                        <span class="text-xs text-gray-500">52 minutes ago</span>
-                    </div>
-                </div>
-                <div class="flex justify-end mb-4">
-                    <div class="bg-blue-500 text-white p-2 rounded-lg">
-                        <p>Let's go to the mall</p>
-                        <span class="text-xs text-gray-200">44 minutes ago</span>
-                    </div>
-                </div>
-                <div class="flex mb-4">
-                    <div class="flex items-center">
-                        <img alt="Robin Sparkles avatar" class="w-8 h-8 rounded-full mr-2" height="32" src="https://storage.googleapis.com/a1aa/image/bztGus3y2a7HKFLcq0X0OhJioyGAgsVO14BmEvvGgqpfKw8JA.jpg" width="32"/>
-                    </div>
-                    <div class="bg-gray-100 p-2 rounded-lg border">
-                        <p>hey😂</p>
-                        <span class="text-xs text-gray-500">36 minutes ago</span>
-                    </div>
-                </div>
-            </div>
-            <div class="p-4 bg-white border-t flex items-center">
-                <i class="far fa-smile text-gray-400 mr-2"></i>
-                <input class="flex-1 p-2 border rounded" placeholder="Write a message" type="text"/>
-                <i class="fas fa-paper-plane text-blue-500 ml-2"></i>
-            </div>
-        </main>
+    <div class="flex-1 p-4 overflow-y-auto bg-gray-50">
+      <!-- Show Messages from Discussion -->
+      <div v-if="discussion && id" class="flex flex-col-reverse">
+        <!-- Render existing messages -->
+        <div
+          v-for="message in discussion.data"
+          :key="message.id"
+          class="flex mb-4"
+          :class="message.user.id === auth ? 'justify-end' : ''"
+        >
+          <!-- Sender Avatar -->
+          <div
+            v-if="message.user.id !== auth"
+            class="flex items-center"
+          >
+            <img
+              :src="'storage/' + message.user.avatar"
+              alt="Avatar"
+              class="w-5 h-5 rounded-full mr-2"
+              onerror="this.src='https://icons.iconarchive.com/icons/papirus-team/papirus-status/512/avatar-default-icon.png'"
+            />
+          </div>
 
-</div>
+          <!-- Message Bubble -->
+          <div
+            :class="message.user.id === auth ? 'bg-blue-500 text-white' : 'bg-gray-100'"
+            class="p-2 rounded-lg border"
+          >
+            <p>{{ message.content }}</p>
+            <span
+              :class="message.user.id === auth ? 'text-xs text-gray-200' : 'text-xs text-gray-500'"
+            >
+              {{ message.created_at | moment("calendar") | removeToday() }}
+            </span>
+          </div>
+        </div>
 
+        <!-- Render Loaded Messages -->
+        <div
+          v-for="message in discussionLoad"
+          :key="message.id"
+          class="flex mb-4"
+          :class="message.user.id === auth ? 'justify-end' : ''"
+        >
+          <!-- Sender Avatar -->
+          <div
+            v-if="message.user.id !== auth"
+            class="flex items-center"
+          >
+            <img
+              :src="'storage/' + message.user.avatar"
+              alt="Avatar"
+              class="w-8 h-8 rounded-full mr-2"
+              onerror="this.src='https://www.kindpng.com/picc/m/207-2074624_white-gray-circle-avatar-png-transparent-png.png'"
+            />
+          </div>
+
+          <!-- Message Bubble -->
+          <div
+            :class="message.user.id === auth ? 'bg-blue-500 text-white' : 'bg-gray-100'"
+            class="p-2 rounded-lg border"
+          >
+            <p>{{ message.content }}</p>
+            <span
+              :class="message.user.id === auth ? 'text-xs text-gray-200' : 'text-xs text-gray-500'"
+            >
+              {{ message.created_at | moment("calendar") | removeToday() }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Load More Button -->
+        <button
+          v-if="page < discussion.last_page"
+          @click="loadMore"
+          class="bg-transparent text-blue-500 py-1 ring-1 text-sm"
+        >
+          Load More...
+        </button>
+        <span
+          v-else
+          class="w-full p-1 text-center text-sm text-gray-500"
+        >
+          No more messages!
+        </span>
+      </div>
+
+      <!-- Welcome Message -->
+      <div v-else class="chat-box">
+        <div class="welcome text-center flex flex-col items-center gap-4">
+          <i class="fas fa-comments text-blue-500 text-8xl"></i>
+          <h1 class="text-3xl">Welcome to ChatApp</h1>
+          <h4 class="text-2xl">Select a conversation to start chatting!</h4>
+          <br />
+          <p style="text-align: center; font-size: 16px;line-height:30px">
+            1. Click the <b>+</b> icon to find a user you want to chat with.<br />
+            2. Wait for the user to accept your chat request.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Input -->
+    <div class="p-4 bg-white border-t flex items-center">
+      <form
+        class="flex-1 flex"
+        @submit.prevent="sendMsg"
+        @keypress="handleKeys($event)"
+      >
+        <textarea
+          v-model="form.content"
+          ref="content"
+          type="text"
+          name="content"
+          placeholder="Write a message..."
+          class="flex-1 p-2 border rounded resize-none"
+          :class="{ 'is-invalid': form.errors.has('content') }"
+        ></textarea>
+        <button
+          :disabled="form.busy"
+          type="submit"
+          class=""
+
+        >
+          <i class="fas fa-paper-plane text-blue-500 ml-2"></i>
+        </button>
+      </form>
+    </div>
+  </main>
 </template>
-
 <script>
 import Form from 'vform'
 export default {
-  props : ['discussion' ,'id', 'auth'],
+  props : ['listuser', 'discussion' ,'id', 'auth'],
   data() {
     return {
       form : new Form({
@@ -136,7 +231,6 @@ export default {
     justify-content: center;
     flex-direction: column;
     align-items: space-between;
-    background-color: rgb(232, 241, 252) ;
     flex: 1;
     width: 100%;
   }

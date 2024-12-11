@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'Chat App') }}</title>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -37,11 +37,27 @@ font-family: system-ui;
     
   <!-- Header -->
   <header class="flex items-center justify-between bg-white p-4 shadow mb-1">
-        <h1 class="text-xl font-bold">Chat App</h1>
+        <a class="" href="{{url('/')}}">
+                <i class="fas fa-comments text-blue-500 text-2xl"></i>
+                <span class="text-2xl font-bold text-blue-600 ml-2">ChatApp</span>
+            </a>
         <div class="flex items-center space-x-4">
-            <i class="fas fa-moon text-gray-600 cursor-pointer" id="dark-mode-toggle"></i>
-            <i class="fas fa-sync-alt text-gray-600"></i>
-            <i class="fas fa-robot text-blue-600"></i>
+        <div class="flex items-center gap-4" >
+                                    <img src="{{ Storage::url(Auth::user()->avatar) }}" alt="User Avatar" onerror="this.src='https://icons.iconarchive.com/icons/papirus-team/papirus-status/512/avatar-default-icon.png'" class="rounded-full object-cover rounded-full h-[30px] w-[30px]">
+
+                                <span class="capitalize text-sm">
+                                    {{ Auth::user()->name }}
+                                </span>
+                                </div>
+            <a class="dropdown-item" href="{{ route('logout') }}"
+                                       onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                         <i class="fas fa-sign-out-alt text-red-600"></i>
+                                    </a>
+
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                        @csrf
+                                    </form>           
         </div>
     </header>
 

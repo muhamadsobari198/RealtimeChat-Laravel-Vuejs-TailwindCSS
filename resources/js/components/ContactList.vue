@@ -50,17 +50,20 @@
                       <div v-for="discussion in discussions"  :key="discussion.index"  @click="selectDiscussion(discussion)" >
                       <div class="p-2  mb-4 rounded-lg border hover:ring-1 hover:ring-1-blue-800 outline-none transition-all duration-300" v-if="discussion.users.length && (discussion.users[0].requests_in[0] || discussion.users[0].requests_out[0])" :class="discussionItemClass(discussion)" >
                             <div class="flex items-center rounded">
-                              <img :src="'storage/'+discussion.users[0].avatar" alt=""  class="w-8 h-8 rounded-full mr-2" height="32"  srcset="" onerror="this.src='https://storage.googleapis.com/a1aa/image/bztGus3y2a7HKFLcq0X0OhJioyGAgsVO14BmEvvGgqpfKw8JA.jpg'">
+                              <img :src="'storage/'+discussion.users[0].avatar" alt=""  class="w-8 h-8 rounded-full mr-2" height="32"  srcset="" onerror="this.src='https://icons.iconarchive.com/icons/papirus-team/papirus-status/512/avatar-default-icon.png'">
 
                             <span class="flex-1 font-bold text-sm" style="text-transform:capitalize">{{discussion.users[0].name}}</span>
+
+
+                            <div class="unreadCount text-sm rounded-full w-5 h-5 text-center !p-0" v-if="discussion.unreadCount"> {{discussion.unreadCount}}</div>
+              
+
                             </div>
                             <div class="flex justify-between mt-2">
                                         <div class="text-sm" v-if="discussion.messages[0]">{{ discussion.messages[0].content | max30() }}</div>
                                       <div class="text-sm" v-if="discussion.messages[0]">{{discussion.messages[0].created_at | moment("from", "now")}}</div>
                                     </div>
 
-                            <div class="unreadCount" v-if="discussion.unreadCount"> {{discussion.unreadCount}}</div>
-              
                             <div v-if="!discussion.users[0].pivot.contact && discussion.pivot.contact" class="w-full flex justify-between">
                             
                               <span class="text-sm text-gray-500 text-yellow-700">Request pending ... </span>
@@ -79,7 +82,7 @@
                       </div>
                       </div>
                     </div>
-                    <div v-else class="text-center py-8 mb-4 rounded-lg transition-all duration-300 text-red-500 font-bold">
+                    <div v-else class="text-center py-2 mb-4 rounded-lg transition-all duration-300 border bg-gray-50">
                       <h1> No Chat Found</h1>
                     </div>
                 </div>

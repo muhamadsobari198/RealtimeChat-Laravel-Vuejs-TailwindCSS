@@ -2,7 +2,7 @@
    <!-- Main Content -->
     <div class="flex flex-1 overflow-hidden">
                 <contact-list v-on:search-discussions="search" v-on:discussion-selected="getDiscussion" :auth="auth" :selected="discussion_id" :discussions="searchResults"></contact-list>
-                <chat-box  :id="discussion_id" :auth="auth" :discussion="discussion"></chat-box>
+                <chat-box  :id="discussion_id" :auth="auth" :discussion="discussion" :listuser="searchResults"></chat-box>
     </div>
 </template>
 
