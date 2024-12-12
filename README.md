@@ -1,11 +1,14 @@
-## Cara Install
+# Realtime Chat App - Assestment Test Lenna.ai by Muhamad Sobari
+## Teknologi  : Laravel, Vuejs, TailwindCSS, PostgreSQL
 
-- `cp .env.example .env` .env.example didalamnya sudah tersedia pusher keys milik saya
-- `composer install`
-- `php artisan migrate`
-- `npm install`
-- `php artisan serve`
-- `php run watch`
+
+## Screen Shoots Aplikasi 
+
+![preview img](/HASILNYA/ss1.png)
+![preview img](/HASILNYA/ss2.png)
+![preview img](/HASILNYA/ss3.png)
+![preview img](/HASILNYA/ss4.png)
+![preview img](/HASILNYA/ss5.png)
    
 ## Fitur
 
